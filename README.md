@@ -1,8 +1,13 @@
 MAX_CORES：最大核心數量，設為 1000。
+
 MAX_SKILLS：最大技能數量，設為 10。
+
 MODE_ONE_CORES：模式一中需要的核心數量，設為 4。
+
 MODE_ONE_SKILLS：模式一中需要的技能數量，設為 6。
+
 MODE_TWO_CORES：模式二中需要的核心數量，設為 6。
+
 MODE_TWO_SKILLS：模式二中需要的技能數量，設為 9。
 
 main()
