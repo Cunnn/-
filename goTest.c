@@ -17,10 +17,12 @@ void modeOne(Core core[], int coreCount, char enumerate);
 void modeTwo(Core core[], int coreCount, char enumerate);
 void parseInput(Core core[], int *coreCount, const char *s);
 void printCores(const Core core[], int coreCount);
+void printSolution(int hold[], int coreCount, int skillCount, const Core core[]);
+int checkSolution(int selected[], int skills);
 
 int main() {
-    char mode = '1';
-    char enumerate = '2';
+    char mode = '1';  // 設置模式
+    char enumerate = '2';  // 設置是否列舉
     printf("楓之谷完美核心組合\n\n");
     
     // char s[] = "231,145,163,654,124,245,236,124,235,612,135,234,136,346,236,356,134,543";
@@ -53,7 +55,7 @@ void parseInput(Core core[], int *coreCount, const char *s) {
         for (int i = 0; i < MAX_SKILLS; i++) {
             core[*coreCount].skills[i] = 0;
         }
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3 && *p != '\0' && *p != ','; i++) {
             core[*coreCount].skillOrder[i] = *p - '0';
             core[*coreCount].skills[*p - '0'] = 1;
             p++;
@@ -97,46 +99,31 @@ int checkSolution(int selected[], int skills) {
 void modeOne(Core core[], int coreCount, char enumerate) {
     int selected[MAX_SKILLS] = {0};
     int hold[MODE_ONE_CORES];
-    printf("start\n");
     for (int i = 0; i < coreCount; i++) {
         memset(selected, 0, sizeof(selected));
-        for (int a = 0; a < 3; a++) {
-            selected[core[i].skillOrder[a]]++;
-        }
+        for (int a = 0; a < 3; a++) selected[core[i].skillOrder[a]]++;
         hold[0] = i;
         for (int j = 0; j < coreCount; j++) {
             if (j == i) continue;
-            for (int a = 0; a < 3; a++) {
-                selected[core[j].skillOrder[a]]++;
-            }
+            for (int a = 0; a < 3; a++) selected[core[j].skillOrder[a]]++;
             hold[1] = j;
             for (int k = 0; k < coreCount; k++) {
                 if (k == i || k == j) continue;
-                for (int a = 0; a < 3; a++) {
-                    selected[core[k].skillOrder[a]]++;
-                }
+                for (int a = 0; a < 3; a++) selected[core[k].skillOrder[a]]++;
                 hold[2] = k;
                 for (int l = 0; l < coreCount; l++) {
                     if (l == i || l == j || l == k) continue;
-                    for (int a = 0; a < 3; a++) {
-                        selected[core[l].skillOrder[a]]++;
-                    }
+                    for (int a = 0; a < 3; a++) selected[core[l].skillOrder[a]]++;
                     hold[3] = l;
                     if (checkSolution(selected, MODE_ONE_SKILLS)) {
                         printSolution(hold, MODE_ONE_CORES, MODE_ONE_SKILLS, core);
                         if (enumerate == '2') return;
                     }
-                    for (int a = 0; a < 3; a++) {
-                        selected[core[l].skillOrder[a]]--;
-                    }
+                    for (int a = 0; a < 3; a++) selected[core[l].skillOrder[a]]--;
                 }
-                for (int a = 0; a < 3; a++) {
-                    selected[core[k].skillOrder[a]]--;
-                }
+                for (int a = 0; a < 3; a++) selected[core[k].skillOrder[a]]--;
             }
-            for (int a = 0; a < 3; a++) {
-                selected[core[j].skillOrder[a]]--;
-            }
+            for (int a = 0; a < 3; a++) selected[core[j].skillOrder[a]]--;
         }
     }
     printf("\ndone(並未搜尋出符合的完美核心，請繼續努力蒐集)\n");
@@ -145,66 +132,43 @@ void modeOne(Core core[], int coreCount, char enumerate) {
 void modeTwo(Core core[], int coreCount, char enumerate) {
     int selected[MAX_SKILLS] = {0};
     int hold[MODE_TWO_CORES];
-    printf("start\n");
     for (int i = 0; i < coreCount; i++) {
         memset(selected, 0, sizeof(selected));
-        for (int a = 0; a < 3; a++) {
-            selected[core[i].skillOrder[a]]++;
-        }
+        for (int a = 0; a < 3; a++) selected[core[i].skillOrder[a]]++;
         hold[0] = i;
         for (int j = 0; j < coreCount; j++) {
             if (j == i) continue;
-            for (int a = 0; a < 3; a++) {
-                selected[core[j].skillOrder[a]]++;
-            }
+            for (int a = 0; a < 3; a++) selected[core[j].skillOrder[a]]++;
             hold[1] = j;
             for (int k = 0; k < coreCount; k++) {
                 if (k == i || k == j) continue;
-                for (int a = 0; a < 3; a++) {
-                    selected[core[k].skillOrder[a]]++;
-                }
+                for (int a = 0; a < 3; a++) selected[core[k].skillOrder[a]]++;
                 hold[2] = k;
                 for (int l = 0; l < coreCount; l++) {
                     if (l == i || l == j || l == k) continue;
-                    for (int a = 0; a < 3; a++) {
-                        selected[core[l].skillOrder[a]]++;
-                    }
+                    for (int a = 0; a < 3; a++) selected[core[l].skillOrder[a]]++;
                     hold[3] = l;
                     for (int m = 0; m < coreCount; m++) {
                         if (m == i || m == j || m == k || m == l) continue;
-                        for (int a = 0; a < 3; a++) {
-                            selected[core[m].skillOrder[a]]++;
-                        }
+                        for (int a = 0; a < 3; a++) selected[core[m].skillOrder[a]]++;
                         hold[4] = m;
                         for (int n = 0; n < coreCount; n++) {
                             if (n == i || n == j || n == k || n == l || n == m) continue;
-                            for (int a = 0; a < 3; a++) {
-                                selected[core[n].skillOrder[a]]++;
-                            }
+                            for (int a = 0; a < 3; a++) selected[core[n].skillOrder[a]]++;
                             hold[5] = n;
                             if (checkSolution(selected, MODE_TWO_SKILLS)) {
                                 printSolution(hold, MODE_TWO_CORES, MODE_TWO_SKILLS, core);
                                 if (enumerate == '2') return;
                             }
-                            for (int a = 0; a < 3; a++) {
-                                selected[core[n].skillOrder[a]]--;
-                            }
+                            for (int a = 0; a < 3; a++) selected[core[n].skillOrder[a]]--;
                         }
-                        for (int a = 0; a < 3; a++) {
-                            selected[core[m].skillOrder[a]]--;
-                        }
+                        for (int a = 0; a < 3; a++) selected[core[m].skillOrder[a]]--;
                     }
-                    for (int a = 0; a < 3; a++) {
-                        selected[core[l].skillOrder[a]]--;
-                    }
+                    for (int a = 0; a < 3; a++) selected[core[l].skillOrder[a]]--;
                 }
-                for (int a = 0; a < 3; a++) {
-                    selected[core[k].skillOrder[a]]--;
-                }
+                for (int a = 0; a < 3; a++) selected[core[k].skillOrder[a]]--;
             }
-            for (int a = 0; a < 3; a++) {
-                selected[core[j].skillOrder[a]]--;
-            }
+            for (int a = 0; a < 3; a++) selected[core[j].skillOrder[a]]--;
         }
     }
     printf("\ndone(並未搜尋出符合的完美核心，請繼續努力蒐集)\n");
